@@ -1,11 +1,29 @@
+/*
+ * Copyright (C) Jessica LASSIE from 2023 to present
+ * All rights reserved
+ */
+
 package fr.jl;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import fr.jl.views.JfClu;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import javax.swing.*;
+
+/**
+ *
+ */
 public class Main {
     public static void main(String[] args) {
 
-        System.out.printf("Hello and welcome!");
-        
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (Exception ex) {
+            System.out.println("Failed to initialize LaF");
+        }
+        JFrame frame = new JfClu();
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setSize(800,600);
+
     }
 }

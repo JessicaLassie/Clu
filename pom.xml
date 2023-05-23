@@ -12,6 +12,17 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependencies versions -->
+        <FLATLAF.version>3.1.1</FLATLAF.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>${FLATLAF.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
