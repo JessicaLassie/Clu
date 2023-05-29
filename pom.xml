@@ -15,6 +15,7 @@
 
         <!-- Dependencies versions -->
         <FLATLAF.version>3.1.1</FLATLAF.version>
+        <MYSQL-CONNECTOR.version>8.0.33</MYSQL-CONNECTOR.version>
     </properties>
 
     <dependencies>
@@ -22,6 +23,11 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>${FLATLAF.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${MYSQL-CONNECTOR.version}</version>
         </dependency>
     </dependencies>
 

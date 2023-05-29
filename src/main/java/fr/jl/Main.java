@@ -21,9 +21,11 @@ public class Main {
             System.out.println("Failed to initialize LaF");
         }
         JFrame frame = new JfClu();
+        frame.setTitle("Clu");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setSize(800,600);
+        frame.setSize(1024,768);
+        frame.setLocationRelativeTo(null);
 
     }
 }
