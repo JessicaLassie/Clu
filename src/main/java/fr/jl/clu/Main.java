@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javax.swing.*;
 
 /**
- *
+ * The main class
  */
 public class Main {
 

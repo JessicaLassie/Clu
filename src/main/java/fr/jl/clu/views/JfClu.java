@@ -19,7 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *
+ * The frame
  */
 public class JfClu extends JFrame {
 
@@ -35,16 +35,19 @@ public class JfClu extends JFrame {
     private JPasswordField passwordTextField;
 
     public JfClu() {
-
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(1, 1));
         mainPanel.add(createConnectionPanel());
         mainPanel.setBackground(Color.blue);
         setContentPane(mainPanel);
         setVisible(true);
-
     }
 
+    /**
+     * Create the connection panel
+     *
+     * @return the connection panel
+     */
     private JPanel createConnectionPanel() {
         JLabel serverLabel = new JLabel("Server *");
         serverTextField = new JTextField();
@@ -117,6 +120,11 @@ public class JfClu extends JFrame {
         return connectionPanel;
     }
 
+    /**
+     * Create the database panel
+     *
+     * @return the database panel
+     */
     private JPanel createDatabasePanel() {
         JLabel databaseName = new JLabel(databaseTextField.getText());
         JButton disconnectButton = new JButton("Disconnect");
@@ -143,6 +151,11 @@ public class JfClu extends JFrame {
         return databasePanel;
     }
 
+    /**
+     * Create the error dialog
+     *
+     * @param errorMessage the error message
+     */
     private void createErrorDialog(String errorMessage) {
         JDialog errorDialog = new JDialog();
         errorDialog.setTitle("Error");
@@ -161,6 +174,11 @@ public class JfClu extends JFrame {
         errorDialog.setVisible(true);
     }
 
+    /**
+     * Check if the text field is not empty
+     *
+     * @param textFieldToCheck the text field to check
+     */
     private void checkMandatoryTextField(JTextField textFieldToCheck) {
         textFieldToCheck.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
