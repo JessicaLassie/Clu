@@ -3,9 +3,11 @@
  * All rights reserved
  */
 
-package fr.jl.views;
+package fr.jl.clu.views;
 
-import fr.jl.controllers.ConnectionController;
+import fr.jl.clu.controllers.ConnectionController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -21,16 +23,29 @@ import java.sql.SQLException;
  */
 public class JfClu extends JFrame {
 
-    private JfClu frame;
+    private static final Logger LOGGER = LogManager.getLogger(JfClu.class);
+
     private Connection cnx;
+    private JPanel mainPanel;
     private JButton connectButton;
     private JTextField serverTextField;
     private JTextField portTextField;
     private JTextField databaseTextField;
     private JTextField loginTextField;
     private JPasswordField passwordTextField;
+
     public JfClu() {
 
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(1, 1));
+        mainPanel.add(createConnectionPanel());
+        mainPanel.setBackground(Color.blue);
+        setContentPane(mainPanel);
+        setVisible(true);
+
+    }
+
+    private JPanel createConnectionPanel() {
         JLabel serverLabel = new JLabel("Server *");
         serverTextField = new JTextField();
         JPanel serverPanel = new JPanel(new BorderLayout());
@@ -65,26 +80,17 @@ public class JfClu extends JFrame {
         connectButton.setEnabled(false);
         JPanel connectPanel = new JPanel();
         connectPanel.add(connectButton);
-        connectPanel.setBorder(BorderFactory.createEmptyBorder(15,0,0,0));
+        connectPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-        JPanel connectionViewPanel = new JPanel();
-        connectionViewPanel.setLayout(new GridLayout(6,1));
-        connectionViewPanel.add(serverPanel);
-        connectionViewPanel.add(portPanel);
-        connectionViewPanel.add(databasePanel);
-        connectionViewPanel.add(loginPanel);
-        connectionViewPanel.add(passwordPanel);
-        connectionViewPanel.add(connectPanel);
-        connectionViewPanel.setBorder(BorderFactory.createEmptyBorder(120,350,120,350));
-
-        JLabel databaseName = new JLabel();
-        JButton disconnectButton = new JButton("Disconnect");
-        JPanel databaseViewPanel = new JPanel();
-        databaseViewPanel.add(databaseName);
-        databaseViewPanel.add(disconnectButton);
-
-        setContentPane(connectionViewPanel);
-        setVisible(true);
+        JPanel connectionPanel = new JPanel();
+        connectionPanel.setLayout(new GridLayout(6, 1));
+        connectionPanel.add(serverPanel);
+        connectionPanel.add(portPanel);
+        connectionPanel.add(databasePanel);
+        connectionPanel.add(loginPanel);
+        connectionPanel.add(passwordPanel);
+        connectionPanel.add(connectPanel);
+        connectionPanel.setBorder(BorderFactory.createEmptyBorder(150, 350, 150, 350));
 
         checkMandatoryTextField(serverTextField);
         checkMandatoryTextField(portTextField);
@@ -92,86 +98,98 @@ public class JfClu extends JFrame {
         checkMandatoryTextField(loginTextField);
         checkMandatoryTextField(passwordTextField);
 
-
-
-        connectButton.addActionListener( new ActionListener()
-        {
+        connectButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 try {
                     cnx = ConnectionController.getConnection(serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
-                    connectionViewPanel.setVisible(false);
-                    databaseName.setText(databaseTextField.getText());
-                    setContentPane(databaseViewPanel);
+                    if (cnx != null) {
+                        showPanel(createDatabasePanel());
+                        LOGGER.info("Connection success");
+                    }
                 } catch (SQLException ex) {
-                    System.out.println(ex.getCause());
-                    JDialog errorDialog = new JDialog();
-                    errorDialog.setTitle("Error");
-                    JTextPane errorMessage = new JTextPane();
-                    errorMessage.setText(ex.getMessage());
-                    errorMessage.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-                    errorDialog.add(errorMessage);
-                    errorDialog.setSize(600,150);
-                    int xDiff = (connectionViewPanel.getWidth() - errorDialog.getWidth()) / 2;
-                    int x = ((int) connectionViewPanel.getLocationOnScreen().getX()) + xDiff;
-                    int yDiff = (connectionViewPanel.getHeight() - errorDialog.getHeight()) / 2;
-                    int y = ((int) connectionViewPanel.getLocationOnScreen().getY()) + yDiff;
-                    errorDialog.setLocation(x, y);
-                    errorDialog.setVisible(true);
+                    createErrorDialog(ex.getMessage());
+                    LOGGER.error(ex.getMessage());
                 }
             }
         });
 
-        disconnectButton.addActionListener( new ActionListener()
-        {
+        return connectionPanel;
+    }
+
+    private JPanel createDatabasePanel() {
+        JLabel databaseName = new JLabel(databaseTextField.getText());
+        JButton disconnectButton = new JButton("Disconnect");
+        JPanel databasePanel = new JPanel();
+        databasePanel.add(databaseName);
+        databasePanel.add(disconnectButton);
+
+        disconnectButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 try {
                     cnx = ConnectionController.disconnect(cnx);
-                    databaseViewPanel.setVisible(false);
-                    setContentPane(connectionViewPanel);
-                    connectionViewPanel.setVisible(true);
+                    if (cnx == null) {
+                        showPanel(createConnectionPanel());
+                        LOGGER.info("Disconnection success");
+                    }
                 } catch (SQLException ex) {
-                    System.out.println(ex.getCause());
-                    JDialog errorDialog = new JDialog();
-                    errorDialog.setTitle("Error");
-                    JTextPane errorMessage = new JTextPane();
-                    errorMessage.setText(ex.getMessage());
-                    errorMessage.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-                    errorDialog.add(errorMessage);
-                    errorDialog.setSize(600,150);
-                    int xDiff = (connectionViewPanel.getWidth() - errorDialog.getWidth()) / 2;
-                    int x = ((int) connectionViewPanel.getLocationOnScreen().getX()) + xDiff;
-                    int yDiff = (connectionViewPanel.getHeight() - errorDialog.getHeight()) / 2;
-                    int y = ((int) connectionViewPanel.getLocationOnScreen().getY()) + yDiff;
-                    errorDialog.setLocation(x, y);
-                    errorDialog.setVisible(true);
+                    createErrorDialog(ex.getMessage());
+                    LOGGER.info(ex.getMessage());
                 }
             }
         });
 
+        return databasePanel;
     }
+
+    private void createErrorDialog(String errorMessage) {
+        JDialog errorDialog = new JDialog();
+        errorDialog.setTitle("Error");
+        JTextPane errorTextPane = new JTextPane();
+        errorTextPane.setContentType("text/html");
+        errorTextPane.setText("<html><center>" + errorMessage + "</center></html>");
+        errorTextPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        errorTextPane.setEditable(false);
+        errorDialog.add(errorTextPane);
+        errorDialog.setSize(600, 125);
+        int xDiff = (mainPanel.getWidth() - errorDialog.getWidth()) / 2;
+        int x = ((int) mainPanel.getLocationOnScreen().getX()) + xDiff;
+        int yDiff = (mainPanel.getHeight() - errorDialog.getHeight()) / 2;
+        int y = ((int) mainPanel.getLocationOnScreen().getY()) + yDiff;
+        errorDialog.setLocation(x, y);
+        errorDialog.setVisible(true);
+    }
+
     private void checkMandatoryTextField(JTextField textFieldToCheck) {
         textFieldToCheck.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 checkMandatory();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 checkMandatory();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 checkMandatory();
             }
+
             private void checkMandatory() {
-                if (serverTextField.getText().length()>0 && portTextField.getText().length()>0 && databaseTextField.getText().length()>0 && loginTextField.getText().length()>0 && passwordTextField.getText().length()>0){
+                if (serverTextField.getText().length() > 0 && portTextField.getText().length() > 0 && databaseTextField.getText().length() > 0 && loginTextField.getText().length() > 0 && passwordTextField.getPassword().length > 0) {
                     connectButton.setEnabled(true);
                 } else {
                     connectButton.setEnabled(false);
                 }
             }
         });
+    }
+
+    private void showPanel(JPanel panel) {
+        mainPanel.removeAll();
+        mainPanel.add(panel);
+        mainPanel.validate();
+        mainPanel.repaint();
     }
 
 }

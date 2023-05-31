@@ -16,6 +16,7 @@
         <!-- Dependencies versions -->
         <FLATLAF.version>3.1.1</FLATLAF.version>
         <MYSQL-CONNECTOR.version>8.0.33</MYSQL-CONNECTOR.version>
+        <LOG4J.version>2.20.0</LOG4J.version>
     </properties>
 
     <dependencies>
@@ -28,6 +29,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${MYSQL-CONNECTOR.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${LOG4J.version}</version>
         </dependency>
     </dependencies>
 

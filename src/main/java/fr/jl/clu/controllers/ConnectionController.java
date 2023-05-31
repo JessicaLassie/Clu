@@ -3,7 +3,7 @@
  * All rights reserved
  */
 
-package fr.jl.controllers;
+package fr.jl.clu.controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class ConnectionController {
 
-    public static Connection getConnection(final String server, final String port, final String database, final String login,  final char[] password) throws SQLException {
+    public static Connection getConnection(final String server, final String port, final String database, final String login, final char[] password) throws SQLException {
         final String url = "jdbc:mysql://" + server + ":" + port + "/" + database;
         return DriverManager.getConnection(url, login, new String(password));
     }

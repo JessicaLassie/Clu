@@ -11,4 +11,5 @@ Cf CHANGELOG.md
 ## Executables environment
 
 ### Executables and environment variables
+
 At least Java 8
