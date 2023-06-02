@@ -37,7 +37,7 @@ public class JfClu extends JFrame {
     public JfClu() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(1, 1));
-        mainPanel.add(createConnectionPanel());
+        mainPanel.add(createConnectionViewPanel());
         mainPanel.setBackground(Color.blue);
         setContentPane(mainPanel);
         setVisible(true);
@@ -48,7 +48,7 @@ public class JfClu extends JFrame {
      *
      * @return the connection panel
      */
-    private JPanel createConnectionPanel() {
+    private JPanel createConnectionViewPanel() {
         JLabel driverLabel = new JLabel("Driver *");
         String[] driversList = new String[]{"MySQL", "PostgreSQL"};
         JComboBox driverComboBox = new JComboBox(driversList);
@@ -92,16 +92,16 @@ public class JfClu extends JFrame {
         connectPanel.add(connectButton);
         connectPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-        JPanel connectionPanel = new JPanel();
-        connectionPanel.setLayout(new GridLayout(7, 1));
-        connectionPanel.add(driverPanel);
-        connectionPanel.add(serverPanel);
-        connectionPanel.add(portPanel);
-        connectionPanel.add(databasePanel);
-        connectionPanel.add(loginPanel);
-        connectionPanel.add(passwordPanel);
-        connectionPanel.add(connectPanel);
-        connectionPanel.setBorder(BorderFactory.createEmptyBorder(150, 350, 150, 350));
+        JPanel connectionViewPanel = new JPanel();
+        connectionViewPanel.setLayout(new GridLayout(7, 1));
+        connectionViewPanel.add(driverPanel);
+        connectionViewPanel.add(serverPanel);
+        connectionViewPanel.add(portPanel);
+        connectionViewPanel.add(databasePanel);
+        connectionViewPanel.add(loginPanel);
+        connectionViewPanel.add(passwordPanel);
+        connectionViewPanel.add(connectPanel);
+        connectionViewPanel.setBorder(BorderFactory.createEmptyBorder(150, 350, 150, 350));
 
         checkMandatoryTextField(serverTextField);
         checkMandatoryTextField(portTextField);
@@ -115,7 +115,7 @@ public class JfClu extends JFrame {
                 try {
                     cnx = ConnectionController.getConnection(driverComboBox.getSelectedItem().toString().toLowerCase(), serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
                     if (cnx != null) {
-                        showPanel(createDatabasePanel());
+                        showPanel(createDatabaseViewPanel());
                         LOGGER.info("Connection success");
                     }
                 } catch (SQLException ex) {
@@ -125,7 +125,7 @@ public class JfClu extends JFrame {
             }
         });
 
-        return connectionPanel;
+        return connectionViewPanel;
     }
 
     /**
@@ -133,12 +133,43 @@ public class JfClu extends JFrame {
      *
      * @return the database panel
      */
-    private JPanel createDatabasePanel() {
+    private JPanel createDatabaseViewPanel() {
+
+        JLabel databaseLabel = new JLabel("Database : ");
         JLabel databaseName = new JLabel(databaseTextField.getText());
+        JPanel databasePanel = new JPanel(new BorderLayout());
+        databasePanel.add(databaseLabel, BorderLayout.WEST);
+        databasePanel.add(databaseName, BorderLayout.CENTER);
+
         JButton disconnectButton = new JButton("Disconnect");
-        JPanel databasePanel = new JPanel();
-        databasePanel.add(databaseName);
-        databasePanel.add(disconnectButton);
+        JPanel disconnectPanel = new JPanel();
+        disconnectPanel.add(disconnectButton);
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(databasePanel, BorderLayout.CENTER);
+        headerPanel.add(disconnectPanel, BorderLayout.EAST);
+
+        JLabel dtoLabel = new JLabel("dto");
+        JPanel DTOPanel = new JPanel();
+        DTOPanel.add(dtoLabel);
+
+        JLabel daoLabel = new JLabel("dao");
+        JPanel DAOPanel = new JPanel();
+        DAOPanel.add(daoLabel);
+
+        JLabel csvLabel = new JLabel("csv");
+        JPanel CSVPanel = new JPanel();
+        CSVPanel.add(csvLabel);
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("DTO", DTOPanel);
+        tabbedPane.add("DAO", DAOPanel);
+        tabbedPane.add("CSV", CSVPanel);
+
+        JPanel databaseViewPanel = new JPanel(new BorderLayout());
+        databaseViewPanel.add(headerPanel, BorderLayout.NORTH);
+        databaseViewPanel.add(tabbedPane, BorderLayout.CENTER);
+        databaseViewPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 30, 30));
 
         disconnectButton.addActionListener(new ActionListener() {
             @Override
@@ -146,7 +177,7 @@ public class JfClu extends JFrame {
                 try {
                     cnx = ConnectionController.disconnect(cnx);
                     if (cnx == null) {
-                        showPanel(createConnectionPanel());
+                        showPanel(createConnectionViewPanel());
                         LOGGER.info("Disconnection success");
                     }
                 } catch (SQLException ex) {
@@ -156,7 +187,7 @@ public class JfClu extends JFrame {
             }
         });
 
-        return databasePanel;
+        return databaseViewPanel;
     }
 
     /**
