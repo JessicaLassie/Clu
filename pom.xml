@@ -16,6 +16,7 @@
         <!-- Dependencies versions -->
         <FLATLAF.version>3.1.1</FLATLAF.version>
         <MYSQL-CONNECTOR.version>8.0.33</MYSQL-CONNECTOR.version>
+        <POSTGRESQL-CONNECTOR.version>42.6.0</POSTGRESQL-CONNECTOR.version>
         <LOG4J.version>2.20.0</LOG4J.version>
     </properties>
 
@@ -29,6 +30,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${MYSQL-CONNECTOR.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${POSTGRESQL-CONNECTOR.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

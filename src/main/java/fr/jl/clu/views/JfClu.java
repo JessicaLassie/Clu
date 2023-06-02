@@ -49,6 +49,13 @@ public class JfClu extends JFrame {
      * @return the connection panel
      */
     private JPanel createConnectionPanel() {
+        JLabel driverLabel = new JLabel("Driver *");
+        String[] driversList = new String[]{"MySQL", "PostgreSQL"};
+        JComboBox driverComboBox = new JComboBox(driversList);
+        JPanel driverPanel = new JPanel(new BorderLayout());
+        driverPanel.add(driverLabel, BorderLayout.CENTER);
+        driverPanel.add(driverComboBox, BorderLayout.SOUTH);
+
         JLabel serverLabel = new JLabel("Server *");
         serverTextField = new JTextField();
         JPanel serverPanel = new JPanel(new BorderLayout());
@@ -86,7 +93,8 @@ public class JfClu extends JFrame {
         connectPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         JPanel connectionPanel = new JPanel();
-        connectionPanel.setLayout(new GridLayout(6, 1));
+        connectionPanel.setLayout(new GridLayout(7, 1));
+        connectionPanel.add(driverPanel);
         connectionPanel.add(serverPanel);
         connectionPanel.add(portPanel);
         connectionPanel.add(databasePanel);
@@ -105,7 +113,7 @@ public class JfClu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    cnx = ConnectionController.getConnection(serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
+                    cnx = ConnectionController.getConnection(driverComboBox.getSelectedItem().toString().toLowerCase(), serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
                     if (cnx != null) {
                         showPanel(createDatabasePanel());
                         LOGGER.info("Connection success");
