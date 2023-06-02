@@ -5,8 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.jl</groupId>
-    <artifactId>Clu</artifactId>
+    <artifactId>clu</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Clu</name>
+    <description>Clu is a desktop application developed in Java/Swing allowing to generate DTO.</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -42,5 +44,26 @@
             <version>${LOG4J.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <mainClass>fr.jl.clu.Main</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
 
 </project>

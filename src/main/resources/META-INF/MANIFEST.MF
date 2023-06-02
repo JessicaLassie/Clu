@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Main-Class: fr.jl.clu.Main
+Class-Path: protobuf-java-3.21.9.jar mysql-connector-j-8.0.33.jar postgr
+ esql-42.6.0.jar log4j-api-2.20.0.jar flatlaf-3.1.1.jar checker-qual-3.3
+ 1.0.jar log4j-core-2.20.0.jar
+
