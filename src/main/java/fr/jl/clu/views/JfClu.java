@@ -157,14 +157,10 @@ public class JfClu extends JFrame {
         JPanel DAOPanel = new JPanel();
         DAOPanel.add(daoLabel);
 
-        JLabel csvLabel = new JLabel("csv");
-        JPanel CSVPanel = new JPanel();
-        CSVPanel.add(csvLabel);
-
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("DTO", DTOPanel);
         tabbedPane.add("DAO", DAOPanel);
-        tabbedPane.add("CSV", CSVPanel);
+        tabbedPane.add("CSV", createCSVViewPanel());
 
         JPanel databaseViewPanel = new JPanel(new BorderLayout());
         databaseViewPanel.add(headerPanel, BorderLayout.NORTH);
@@ -188,6 +184,58 @@ public class JfClu extends JFrame {
         });
 
         return databaseViewPanel;
+    }
+
+    private JPanel createCSVViewPanel() {
+        JLabel selectLabel = new JLabel("Select a table : ");
+        JButton exportButton = new JButton("Export");
+        JPanel exportPanel = new JPanel(new BorderLayout());
+        exportPanel.add(selectLabel, BorderLayout.CENTER);
+        exportPanel.add(exportButton, BorderLayout.EAST);
+
+        JCheckBox selectAllCheckBox = new JCheckBox("Select all");
+        JCheckBox deselectAllCheckBox = new JCheckBox("Deselect all");
+        deselectAllCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        JPanel checkboxPanel = new JPanel(new BorderLayout());
+        checkboxPanel.add(selectAllCheckBox, BorderLayout.WEST);
+        checkboxPanel.add(deselectAllCheckBox, BorderLayout.CENTER);
+        checkboxPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+        JPanel northPanel = new JPanel(new BorderLayout());
+        northPanel.add(exportPanel, BorderLayout.NORTH);
+        northPanel.add(checkboxPanel, BorderLayout.CENTER);
+        northPanel.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
+        DefaultListModel<String> tablesModel = new DefaultListModel<>();
+        tablesModel.addElement("Java");
+        tablesModel.addElement("PHP");
+        JList tablesList = new JList(tablesModel);
+        DefaultListModel<String> columnsModel = new DefaultListModel<>();
+        columnsModel.addElement("Java");
+        columnsModel.addElement("PHP");
+        JList columnsList = new JList(columnsModel);
+        String[] columns = new String[]{
+                "Id", "Nom", "Adresse", "Taux horaire", "A temps partiel"
+        };
+        Object[][] data = new Object[][]{
+                {1, "Thomas", "Paris", 20.0, true},
+                {2, "Jean", "Marseille", 50.0, false},
+                {3, "Yohan", "Lyon", 30.0, true},
+                {4, "Emily", "Toulouse", 60.0, false},
+                {5, "Alex", "Nice", 10.0, false},
+        };
+        JTable dataTable = new JTable(data, columns);
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(tablesList, BorderLayout.WEST);
+        centerPanel.add(columnsList, BorderLayout.CENTER);
+        centerPanel.add(dataTable, BorderLayout.EAST);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+        JPanel CSVPanel = new JPanel(new BorderLayout());
+        CSVPanel.add(northPanel, BorderLayout.NORTH);
+        CSVPanel.add(centerPanel, BorderLayout.CENTER);
+
+        return CSVPanel;
     }
 
     /**
