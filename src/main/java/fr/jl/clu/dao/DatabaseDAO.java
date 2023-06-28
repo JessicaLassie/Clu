@@ -24,8 +24,7 @@ public class DatabaseDAO {
      */
     public static ResultSet getDatabaseTables(final Connection cnx) throws SQLException {
         String[] types = {"TABLE"};
-        ResultSet tables = cnx.getMetaData().getTables(cnx.getCatalog(), null, "%", types);
-        return tables;
+        return cnx.getMetaData().getTables(cnx.getCatalog(), null, "%", types);
     }
 
     /**
@@ -38,7 +37,6 @@ public class DatabaseDAO {
      */
     public static ResultSet getDataFromSelectedTable(final Connection cnx, final String selectedTable) throws SQLException {
         Statement stmt = cnx.createStatement();
-        ResultSet dataTable = stmt.executeQuery("Select * from " + selectedTable);
-        return dataTable;
+        return stmt.executeQuery("Select * from " + selectedTable);
     }
 }

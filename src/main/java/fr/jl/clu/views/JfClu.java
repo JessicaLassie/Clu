@@ -15,8 +15,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -33,7 +31,7 @@ public class JfClu extends JFrame {
     private static final Logger LOGGER = LogManager.getLogger(JfClu.class);
 
     private Connection cnx;
-    private JPanel mainPanel;
+    private final JPanel mainPanel;
     private JButton connectButton;
     private JTextField serverTextField;
     private JTextField portTextField;
@@ -117,19 +115,16 @@ public class JfClu extends JFrame {
         checkMandatoryTextField(loginTextField);
         checkMandatoryTextField(passwordTextField);
 
-        connectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    cnx = ConnectionController.getConnection(driverComboBox.getSelectedItem().toString().toLowerCase(), serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
-                    if (cnx != null) {
-                        showPanel(createDatabaseViewPanel());
-                        LOGGER.info("Connection success");
-                    }
-                } catch (SQLException ex) {
-                    createDialog("Error", ex.getMessage());
-                    LOGGER.error(ex.getMessage());
+        connectButton.addActionListener(e -> {
+            try {
+                cnx = ConnectionController.getConnection(driverComboBox.getSelectedItem().toString().toLowerCase(), serverTextField.getText(), portTextField.getText(), databaseTextField.getText(), loginTextField.getText(), passwordTextField.getPassword());
+                if (cnx != null) {
+                    showPanel(createDatabaseViewPanel());
+                    LOGGER.info("Connection success");
                 }
+            } catch (SQLException ex) {
+                createDialog("Error", ex.getMessage());
+                LOGGER.error(ex.getMessage());
             }
         });
 
@@ -175,19 +170,16 @@ public class JfClu extends JFrame {
         databaseViewPanel.add(tabbedPane, BorderLayout.CENTER);
         databaseViewPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 30, 30));
 
-        disconnectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    cnx = ConnectionController.disconnect(cnx);
-                    if (cnx == null) {
-                        showPanel(createConnectionViewPanel());
-                        LOGGER.info("Disconnection success");
-                    }
-                } catch (SQLException ex) {
-                    createDialog("Error", ex.getMessage());
-                    LOGGER.error(ex.getMessage());
+        disconnectButton.addActionListener(e -> {
+            try {
+                cnx = ConnectionController.disconnect(cnx);
+                if (cnx == null) {
+                    showPanel(createConnectionViewPanel());
+                    LOGGER.info("Disconnection success");
                 }
+            } catch (SQLException ex) {
+                createDialog("Error", ex.getMessage());
+                LOGGER.error(ex.getMessage());
             }
         });
 
@@ -246,23 +238,17 @@ public class JfClu extends JFrame {
         CSVPanel.add(northPanel, BorderLayout.NORTH);
         CSVPanel.add(centerPanel, BorderLayout.CENTER);
 
-        selectAllCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectAllCheckBox.isSelected()) {
-                    deselectAllCheckBox.setSelected(false);
-                    tablesList.setSelectionInterval(0, tablesList.getModel().getSize() - 1);
-                }
+        selectAllCheckBox.addActionListener(e -> {
+            if (selectAllCheckBox.isSelected()) {
+                deselectAllCheckBox.setSelected(false);
+                tablesList.setSelectionInterval(0, tablesList.getModel().getSize() - 1);
             }
         });
 
-        deselectAllCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (deselectAllCheckBox.isSelected()) {
-                    selectAllCheckBox.setSelected(false);
-                    tablesList.clearSelection();
-                }
+        deselectAllCheckBox.addActionListener(e -> {
+            if (deselectAllCheckBox.isSelected()) {
+                selectAllCheckBox.setSelected(false);
+                tablesList.clearSelection();
             }
         });
 
@@ -278,25 +264,22 @@ public class JfClu extends JFrame {
             }
         });
 
-        exportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (tablesList.getSelectedValuesList().size() > 0) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                    if (fileChooser.showSaveDialog(CSVPanel) == fileChooser.APPROVE_OPTION) {
-                        try {
-                            String outputPath = fileChooser.getSelectedFile().getAbsolutePath();
-                            ArrayList selectedTablesList = (ArrayList) tablesList.getSelectedValuesList();
-                            CSVController.export(cnx, outputPath, selectedTablesList, databaseTextField.getText());
-                        } catch (SQLException | IOException ex) {
-                            createDialog("Error", ex.getMessage());
-                            LOGGER.error(ex.getMessage());
-                        }
+        exportButton.addActionListener(e -> {
+            if (tablesList.getSelectedValuesList().size() > 0) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                if (fileChooser.showSaveDialog(CSVPanel) == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        String outputPath = fileChooser.getSelectedFile().getAbsolutePath();
+                        ArrayList selectedTablesList = (ArrayList) tablesList.getSelectedValuesList();
+                        CSVController.export(cnx, outputPath, selectedTablesList, databaseTextField.getText());
+                    } catch (SQLException | IOException ex) {
+                        createDialog("Error", ex.getMessage());
+                        LOGGER.error(ex.getMessage());
                     }
-                } else {
-                    createDialog("Error", "Select a table");
                 }
+            } else {
+                createDialog("Error", "Select a table");
             }
         });
 
@@ -347,11 +330,7 @@ public class JfClu extends JFrame {
             }
 
             private void checkMandatory() {
-                if (serverTextField.getText().length() > 0 && portTextField.getText().length() > 0 && databaseTextField.getText().length() > 0 && loginTextField.getText().length() > 0 && passwordTextField.getPassword().length > 0) {
-                    connectButton.setEnabled(true);
-                } else {
-                    connectButton.setEnabled(false);
-                }
+                connectButton.setEnabled(serverTextField.getText().length() > 0 && portTextField.getText().length() > 0 && databaseTextField.getText().length() > 0 && loginTextField.getText().length() > 0 && passwordTextField.getPassword().length > 0);
             }
         });
     }
