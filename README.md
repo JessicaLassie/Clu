@@ -2,7 +2,7 @@
 
 ## Goals
 
-Clu is a desktop application developed in Java/Swing allowing to generate DTO.
+Clu is a desktop application developed in Java/Swing allowing to generate DTO/DAO and export data from database.
 
 ## Changelog
 
@@ -26,7 +26,7 @@ At least Java 8
 ## Developpers
 
 ### App build
-`mvn package`
+`mvn clean compile assembly:single`
 
 ### App launch
 `java -jar clu-<version>.jar`

@@ -32,7 +32,7 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(1024, 768);
         frame.setLocationRelativeTo(null);
-        frame.setIconImage(new ImageIcon("src/main/resources/clu_icon_becris_lineal_20.png").getImage());
+        frame.setIconImage(new ImageIcon(ClassLoader.getSystemResource("clu_icon_becris_lineal_20.png")).getImage());
 
     }
 }
