@@ -21,7 +21,8 @@ Cf CHANGELOG.md
 
 ### Executables and environment variables
 
-At least Java 8
+- Java 8
+- Apache Maven
 
 ## Developpers
 
